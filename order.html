@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
+
+<title>ออเดอร์ของคุณ</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+
+  margin: 0;
+
+  background: #f5f5f5;
+
+  color: #222;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.wrap {
+
+  max-width: 650px;
+
+  margin: auto;
+
+  padding: 18px 14px 30px;
+}
+
+.card {
+
+  background: #fff;
+
+  border-radius: 20px;
+
+  padding: 20px;
+
+  margin-bottom: 13px;
+
+  box-shadow:
+    0 3px 15px rgba(0,0,0,.06);
+}
+
+.center {
+
+  text-align: center;
+}
+
+.title {
+
+  font-size: 14px;
+
+  color: #777;
+}
+
+.order-number {
+
+  font-size: 46px;
+
+  font-weight: 950;
+
+  margin: 3px 0 10px;
+}
+
+.customer {
+
+  font-size: 18px;
+
+  font-weight: 800;
+}
+
+.status {
+
+  padding: 18px;
+
+  border-radius: 15px;
+
+  background: #eee;
+
+  text-align: center;
+
+  font-size: 20px;
+
+  font-weight: 900;
+}
+
+.status.ready {
+
+  background: #e5f7ea;
+
+  color: #176a2e;
+}
+
+.status.closed {
+
+  background: #eee;
+
+  color: #777;
+}
+
+.row {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding: 9px 0;
+
+  border-bottom:
+    1px solid #eee;
+}
+
+.row:last-child {
+
+  border-bottom: 0;
+}
+
+.total {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-top: 10px;
+
+  font-size: 19px;
+
+  font-weight: 900;
+}
+
+.note {
+
+  text-align: center;
+
+  color: #777;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+.btn {
+
+  width: 100%;
+
+  border: 0;
+
+  border-radius: 13px;
+
+  padding: 13px;
+
+  font-size: 16px;
+
+  font-weight: 850;
+
+  background: #222;
+
+  color: #fff;
+
+  cursor: pointer;
+}
+
+.error {
+
+  background: #ffe9e9;
+
+  color: #9b1c1c;
+
+  padding: 13px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+}
+
+/* จัดระยะห่างรอบปุ่ม */
+.close-btn-wrap {
+  margin-top: 12px;
+  width: 100%;
+}
+
+/* สไตล์ปุ่มปิดหน้าต่าง (แบบการ์ดสีขาว คลีนๆ เข้ากับ UI) */
+.btn-close-ui {
+  width: 100%;
+  background: #000000;
+  color: #444444;
+  border: 1px solid #e5e5e5;
+  border-radius: 18px;         /* ความโค้งเท่ากับการ์ดส่วนอื่นๆ */
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+/* เมื่อเอาเมาส์ไปชี้ หรือกดปุ่ม */
+.btn-close-ui:hover {
+  background: #f9f9f9;
+  border-color: #d0d0d0;
+  color: #111111;
+}
+
+.btn-close-ui:active {
+  transform: scale(0.98);
+  background: #f0f0f0;
+}
+</style>
+
+</head>
+
+<body>
+
+<main class="wrap">
+
+
+  <section class="card center">
+
+    <div class="title">
+      เลขออเดอร์ของคุณ
+    </div>
+
+    <div
+      id="orderNumber"
+      class="order-number"
+    >
+      #---
+    </div>
+
+    <div
+      id="customerName"
+      class="customer"
+    >
+      -
+    </div>
+    <div
+  id="paymentInfo"
+  style="
+    margin-top:8px;
+    text-align:center;
+    color:#666;
+    font-size:14px;
+  "
+>
+  วิธีชำระ: -
+</div>
+<div
+  id="paymentQR"
+  style="
+    display:none;
+    text-align:center;
+    margin-top:18px;
+  "
+>
+
+  <div
+    style="
+      font-size:18px;
+      font-weight:900;
+      margin-bottom:10px;
+    "
+  >
+    📱 สแกนจ่าย QR
+  </div>
+
+  <img
+    src="promptpay.png"
+    alt="QR พร้อมเพย์ของร้าน"
+    style="
+      width:280px;
+      max-width:100%;
+      border-radius:12px;
+    "
+  >
+
+  <div
+    style="
+      margin-top:8px;
+      font-size:13px;
+      color:#777;
+    "
+  >
+    สแกน QR นี้เพื่อชำระเงิน
+  </div>
+
+  <button
+    id="paidBtn"
+    class="btn"
+    style="
+      margin-top:12px;
+      background:#222;
+      color:#fff;
+    "
+  >
+    ฉันชำระเงินแล้ว
+  </button>
+
+</div>
+
+  </section>
+
+
+  <section class="card">
+
+    <div
+      id="status"
+      class="status"
+    >
+      กำลังโหลดสถานะ...
+    </div>
+
+    <div
+      id="readyNote"
+      class="note"
+      style="margin-top:10px"
+    ></div>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2
+      style="
+        margin:0 0 10px;
+        font-size:19px
+      "
+    >
+      รายการอาหาร
+    </h2>
+
+    <div id="items"></div>
+
+    <div class="total">
+
+      <span>
+        รวม
+      </span>
+
+      <span id="total">
+        0 บาท
+      </span>
+
+    </div>
+
+  </section>
+
+
+  <section id="message"></section>
+
+
+  <section class="card">
+
+    <div class="note">
+      กรุณาเปิดหน้านี้ไว้
+      ระบบจะแจ้งสถานะเมื่อร้านทำอาหารเสร็จ
+    </div>
+
+  </section>
+  <!-- ปุ่มปิดหน้าต่างแบบเข้ากับ UI -->
+<div class="close-btn-wrap">
+  <button id="closePageBtn" type="button" class="btn-close-ui">
+    ปิดหน้าต่าง
+  </button>
+</div>
+
+</main>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+<script src="firebase-config.js"></script>
+
+<script src="common.js"></script>
+
+
+<script>
+
+ const closePageBtn = document.getElementById("closePageBtn");
+
+if (closePageBtn) {
+  closePageBtn.addEventListener("click", () => {
+    // 1. กรณีเปิดในแอป LINE (LIFF) ให้ปิดหน้าต่างทันที
+    if (typeof liff !== "undefined" && liff.isInClient()) {
+      liff.closeWindow();
+      return;
+    }
+
+    // 2. พยายามสั่งปิดหน้าต่างก่อน (กรณีเปิดเป็น Popup หรือเปิดด้วย window.open)
+    window.close();
+
+    // 3. ถ้าปิดไม่ได้ (เช่น ผู้ใช้เปิดแท็บเอง) ให้เด้งกลับไปหน้าหลัก (customer.html) ทันที
+    setTimeout(() => {
+      window.location.href = "customer.html";
+    }, 100);
+  });
+}
+
+const orderNumberEl =
+  document.getElementById(
+    "orderNumber"
+  );
+
+const customerNameEl =
+  document.getElementById(
+    "customerName"
+  );
+
+const statusEl =
+  document.getElementById(
+    "status"
+  );
+
+const readyNoteEl =
+  document.getElementById(
+    "readyNote"
+  );
+
+const itemsEl =
+  document.getElementById(
+    "items"
+  );
+
+const totalEl =
+  document.getElementById(
+    "total"
+  );
+
+const messageEl =
+  document.getElementById(
+    "message"
+  );
+
+
+const params =
+  new URLSearchParams(
+    window.location.search
+  );
+
+
+const orderId =
+  params.get("id");
+
+const paymentInfoEl =
+  document.getElementById(
+    "paymentInfo"
+  );
+
+const paymentQREl =
+  document.getElementById(
+    "paymentQR"
+  );
+
+const paidBtn =
+  document.getElementById(
+    "paidBtn"
+  );
+
+const PAYMENT_TEXT = {
+
+  cash:
+    "💵 เงินสด",
+
+  promptpay:
+    "📱 สแกนจ่าย QR"
+
+};  
+
+let lastStatus = null;
+
+let unsubscribe = null;
+
+
+let previousStatus = null;
+
+// ฟังก์ชันเล่นเสียง MP3 เมื่ออาหารเสร็จ
+function playCustomerSound() {
+  const audio = new Audio("ready.mp3"); // 👈 ใส่ชื่อไฟล์ mp3 ของฝั่งลูกค้า
+  audio.play().catch(err => {
+    console.log("เกิดข้อผิดพลาดในการเล่นเสียง:", err);
+  });
+}
+
+// ฟังการอัปเดตสถานะออเดอร์จาก Firebase
+db.collection("orders")
+  .doc(orderId)
+  .onSnapshot(doc => {
+    if (!doc.exists) return;
+
+    const data = doc.data();
+    const currentStatus = data.status;
+
+    // ถ้าสถานะเพิ่งเปลี่ยนเป็น "ready" (ทำเสร็จแล้ว) ให้เล่นเสียงเตือนทันที
+    if (
+      previousStatus &&
+      previousStatus !== "ready" &&
+      currentStatus === "ready"
+    ) {
+      playCustomerSound(); // 👈 เสียงจะดังขึ้นตรงนี้
+    }
+
+    // บันทึกสถานะปัจจุบันไว้เปรียบเทียบในรอบถัดไป
+    previousStatus = currentStatus;
+
+    // ... (โค้ดอัปเดตการแสดงผลสถานะบนหน้าจอเดิมของคุณ) ...
+  });
+// ==========================================
+// ข้อความ
+// ==========================================
+
+function showError(text) {
+
+  messageEl.innerHTML =
+    '<div class="error">' +
+    esc(text) +
+    '</div>';
+
+}
+
+
+// ==========================================
+// Auth
+// ==========================================
+
+async function ensureAuth() {
+
+  if (auth.currentUser) {
+    return auth.currentUser;
+  }
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const unsubscribeAuth =
+        auth.onAuthStateChanged(
+          async user => {
+
+            unsubscribeAuth();
+
+            if (user) {
+              resolve(user);
+              return;
+            }
+
+            try {
+
+              const result =
+                await auth.signInAnonymously();
+
+              resolve(result.user);
+
+            } catch (error) {
+
+              reject(error);
+
+            }
+
+          }
+        );
+
+    }
+  );
+}
+
+// ==========================================
+// โหลดออเดอร์
+// ==========================================
+
+async function start() {
+
+  if (!orderId) {
+
+    showError(
+      "ไม่พบเลขออเดอร์"
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    const user =
+      await ensureAuth();
+
+
+    unsubscribe =
+      db
+        .collection("orders")
+        .doc(orderId)
+        .onSnapshot(
+
+          snapshot => {
+
+            if (!snapshot.exists) {
+
+              showError(
+                "ไม่พบออเดอร์นี้"
+              );
+
+              return;
+
+            }
+
+
+            const data =
+              snapshot.data();
+
+
+            // ป้องกันคนอื่นมาเปิดเลขออเดอร์
+            if (
+              data.customerUid !==
+              user.uid
+            ) {
+
+              showError(
+                "คุณไม่มีสิทธิ์ดูออเดอร์นี้"
+              );
+
+              return;
+
+            }
+
+
+            render(data);
+
+          },
+
+          error => {
+
+            console.error(error);
+
+            showError(
+              "ไม่สามารถติดตามออเดอร์ได้: " +
+              error.message
+            );
+
+          }
+
+        );
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    showError(
+      "เชื่อมต่อระบบไม่ได้: " +
+      error.message
+    );
+
+  }
+
+}
+
+
+// ==========================================
+// แสดงข้อมูล
+// ==========================================
+
+function render(data) {
+
+  orderNumberEl.textContent =
+    "#" +
+    String(
+      data.orderNumber
+    ).padStart(
+      3,
+      "0"
+    );
+
+
+  customerNameEl.textContent =
+    "สำหรับ: " +
+    (data.customerName || "-");
+
+    paymentInfoEl.textContent =
+  "วิธีชำระ: " +
+  (
+    PAYMENT_TEXT[
+      data.paymentMethod
+    ] ||
+    "-"
+  );
+
+
+if (
+  data.paymentMethod ===
+  "promptpay"
+) {
+
+  paymentQREl.style.display =
+    "block";
+
+  paidBtn.disabled =
+    data.paymentConfirmedByCustomer === true;
+
+  paidBtn.textContent =
+    data.paymentConfirmedByCustomer === true
+      ? "✓ แจ้งร้านแล้ว"
+      : "ฉันชำระเงินแล้ว";
+
+} else {
+
+  paymentQREl.style.display =
+    "none";
+
+}
+
+  statusEl.textContent =
+    STATUS_TEXT[
+      data.status
+    ] ||
+    data.status ||
+    "กำลังดำเนินการ";
+
+
+  statusEl.className =
+    "status" +
+    (
+      data.status === "ready"
+        ? " ready"
+        : ""
+    );
+
+
+  if (
+    data.status ===
+    "ready"
+  ) {
+
+    readyNoteEl.textContent =
+      "🎉 อาหารของคุณทำเสร็จแล้ว กรุณามารับอาหาร";
+
+  }
+
+  else if (
+    data.status ===
+    "closed"
+  ) {
+
+    readyNoteEl.textContent =
+      "ออเดอร์นี้เสร็จสิ้นแล้ว";
+
+    statusEl.className =
+      "status closed";
+
+  }
+
+  else {
+
+    readyNoteEl.textContent =
+      "ร้านกำลังดำเนินการออเดอร์ของคุณ";
+
+  }
+
+
+  itemsEl.innerHTML =
+    (data.items || [])
+      .map(
+        item => `
+
+          <div class="row">
+
+            <span>
+
+              ${esc(item.name)}
+              × ${item.qty}
+
+            </span>
+
+            <strong>
+
+              ${baht(item.lineTotal)}
+
+            </strong>
+
+          </div>
+
+        `
+      )
+      .join("");
+
+
+  totalEl.textContent =
+    baht(data.total);
+
+
+  if (
+    lastStatus !== null &&
+    lastStatus !== data.status &&
+    data.status === "ready"
+  ) {
+
+    beep();
+
+  }
+
+
+  lastStatus =
+    data.status;
+
+}
+
+paidBtn.addEventListener(
+  "click",
+  async () => {
+
+    if (!orderId) {
+      return;
+    }
+
+    paidBtn.disabled =
+      true;
+
+    try {
+
+      await db
+        .collection("orders")
+        .doc(orderId)
+        .update({
+
+          paymentConfirmedByCustomer:
+            true,
+
+          updatedAt:
+            firebase.firestore
+              .FieldValue
+              .serverTimestamp()
+
+        });
+
+
+      paidBtn.textContent =
+        "✓ แจ้งร้านแล้ว";
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      alert(
+        "แจ้งการชำระเงินไม่สำเร็จ: " +
+        error.message
+      );
+
+      paidBtn.disabled =
+        false;
+
+    }
+
+  }
+);
+
+start();
+
+</script>
+
+</body>
+
+</html>

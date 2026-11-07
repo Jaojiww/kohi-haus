@@ -1,0 +1,496 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>จัดการเมนูร้าน</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f7f5f0;
+      color: #333;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    h2 { margin-top: 0; }
+
+    .panel {
+      background: white;
+      padding: 18px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 10px #0000000c;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      font-size: 15px;
+    }
+
+    button {
+      border: none;
+      background: #333;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button.secondary { background: #777; }
+    button.danger { background: #b94242; }
+    button.green { background: #36845b; }
+
+    .menu-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding: 12px 0;
+    }
+
+    .menu-item img {
+      width: 76px;
+      height: 76px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #eee;
+    }
+
+    .menu-info { flex: 1; min-width: 0; }
+    .menu-info strong { display: block; }
+    .menu-info small { color: #777; }
+
+    .actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .actions button {
+      width: auto;
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .hidden { display: none; }
+
+    #preview {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px;
+      display: none;
+      margin-top: 8px;
+    }
+
+    .hint {
+      color: #777;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media(max-width: 500px) {
+      body { padding: 12px; }
+      .menu-item { align-items: flex-start; }
+      .menu-item img { width: 65px; height: 65px; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <h2>🍽️ จัดการเมนูร้าน</h2>
+
+  <section id="loginPanel" class="panel">
+    <h3>เข้าสู่ระบบร้านค้า</h3>
+    <input id="email" type="email" placeholder="อีเมลร้าน">
+    <input id="password" type="password" placeholder="รหัสผ่าน">
+    <button onclick="login()">เข้าสู่ระบบ</button>
+    <p id="loginMessage" class="hint"></p>
+  </section>
+
+  <section id="adminPanel" class="hidden">
+
+    <div class="panel">
+      <h3 id="formTitle">➕ เพิ่มเมนูใหม่</h3>
+
+      <input id="menuName" placeholder="ชื่อเมนู">
+      <input id="menuPrice" type="number" min="0" placeholder="ราคา (บาท)">
+
+      <select id="menuCategory">
+        <option value="coffee">กาแฟ</option>
+        <option value="matcha">มัทฉะ</option>
+        <option value="tea">ชา</option>
+        <option value="milk">นมและช็อกโกแลต</option>
+        <option value="sandwich">แซนวิช</option>
+        <option value="bread">ขนมปัง</option>
+        <option value="other">อื่น ๆ</option>
+      </select>
+
+      <label>รูปภาพเมนู</label>
+      <input id="menuImage" type="file" accept="image/*">
+      <img id="preview" alt="ตัวอย่างรูปเมนู">
+
+      <p class="hint">
+        เลือกรูปจากมือถือหรือคอมพิวเตอร์ได้
+        ระบบจะย่อขนาดรูปก่อนบันทึก
+      </p>
+
+      <button onclick="saveMenu()">บันทึกเมนู</button>
+      <button class="secondary" onclick="resetForm()">ยกเลิก / ล้างข้อมูล</button>
+
+      <p id="formMessage" class="hint"></p>
+    </div>
+
+    <div class="panel">
+      <h3>📋 เมนูทั้งหมด</h3>
+      <button class="green" onclick="importOldMenu()">
+        นำเข้าเมนูเดิมครั้งแรก
+      </button>
+      <p class="hint">
+        กดปุ่มนี้เพื่อนำเข้าเมนูจาก menu-defaults.js
+        หากมีเมนูอยู่แล้ว ระบบจะไม่สร้างรายการซ้ำ
+      </p>
+      <div id="menuList">กำลังโหลดเมนู...</div>
+    </div>
+
+    <button class="danger" onclick="logout()">ออกจากระบบ</button>
+  </section>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+<script src="firebase-config.js"></script>
+<script src="common.js"></script>
+<script src="menu-defaults.js"></script>
+
+<script>
+const db = window.db || firebase.firestore();
+const auth = window.auth || firebase.auth();
+const SHOP_EMAIL = window.SHOP_EMAIL || "yanisakri98@gmail.com";
+
+let editingId = null;
+let currentImage = "";
+let allMenus = [];
+
+auth.onAuthStateChanged(user => {
+  if (user && user.email === SHOP_EMAIL) {
+    document.getElementById("loginPanel").classList.add("hidden");
+    document.getElementById("adminPanel").classList.remove("hidden");
+    loadMenus();
+  } else {
+    document.getElementById("adminPanel").classList.add("hidden");
+    document.getElementById("loginPanel").classList.remove("hidden");
+  }
+});
+
+async function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const message = document.getElementById("loginMessage");
+
+  try {
+    const result = await auth.signInWithEmailAndPassword(email, password);
+
+    if (result.user.email !== SHOP_EMAIL) {
+      await auth.signOut();
+      message.textContent = "บัญชีนี้ไม่มีสิทธิ์จัดการเมนู";
+    }
+  } catch (error) {
+    message.textContent = "เข้าสู่ระบบไม่สำเร็จ: " + error.message;
+  }
+}
+
+async function logout() {
+  await auth.signOut();
+  location.reload();
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+async function loadMenus() {
+  const list = document.getElementById("menuList");
+  list.textContent = "กำลังโหลดเมนู...";
+
+  try {
+    const snapshot = await db.collection("menuItems").get();
+
+    allMenus = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    renderMenus();
+  } catch (error) {
+    list.textContent = "โหลดเมนูไม่สำเร็จ: " + error.message;
+  }
+}
+
+function renderMenus() {
+  const list = document.getElementById("menuList");
+
+  if (!allMenus.length) {
+    list.textContent = "ยังไม่มีเมนู กดนำเข้าเมนูเดิมหรือเพิ่มเมนูใหม่ได้เลย";
+    return;
+  }
+
+  list.innerHTML = allMenus.map(menu => `
+    <div class="menu-item">
+      <img src="${menu.image || ""}" alt=""
+        onerror="this.style.visibility='hidden'">
+
+      <div class="menu-info">
+        <strong>${escapeHTML(menu.name)}</strong>
+        <small>${Number(menu.price || 0)} บาท ·
+          ${menu.active ? "เปิดขาย" : "ปิดขาย"}
+        </small>
+
+        <div class="actions">
+          <button onclick="editMenu('${menu.id}')">แก้ไข</button>
+          <button class="${menu.active ? "danger" : "green"}"
+            onclick="toggleMenu('${menu.id}')">
+            ${menu.active ? "ปิดขาย" : "เปิดขาย"}
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+document.getElementById("menuImage").addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    alert("กรุณาเลือกไฟล์รูปภาพ");
+    return;
+  }
+
+  try {
+    currentImage = await compressImage(file);
+
+    const preview = document.getElementById("preview");
+    preview.src = currentImage;
+    preview.style.display = "block";
+  } catch (error) {
+    alert("อ่านรูปภาพไม่สำเร็จ");
+  }
+});
+
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = event => {
+      const img = new Image();
+
+      img.onload = () => {
+        const maxSize = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxSize || height > maxSize) {
+          const ratio = Math.min(maxSize / width, maxSize / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        let quality = 0.75;
+        let data = canvas.toDataURL("image/jpeg", quality);
+
+        while (data.length > 430000 && quality > 0.3) {
+          quality -= 0.1;
+          data = canvas.toDataURL("image/jpeg", quality);
+        }
+
+        if (data.length > 430000) {
+          reject(new Error("รูปมีขนาดใหญ่เกินไป"));
+          return;
+        }
+
+        resolve(data);
+      };
+
+      img.onerror = reject;
+      img.src = event.target.result;
+    };
+
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function saveMenu() {
+  const name = document.getElementById("menuName").value.trim();
+  const price = Number(document.getElementById("menuPrice").value);
+  const category = document.getElementById("menuCategory").value;
+  const message = document.getElementById("formMessage");
+
+  if (!name || !Number.isFinite(price) || price <= 0) {
+    message.textContent = "กรุณากรอกชื่อเมนูและราคาที่ถูกต้อง";
+    return;
+  }
+
+  if (!editingId && !currentImage) {
+    // อนุญาตให้เพิ่มเมนูโดยไม่ใส่รูปได้
+  }
+
+  try {
+    const data = {
+      name,
+      price,
+      category,
+      image: currentImage,
+      active: editingId
+        ? (allMenus.find(item => item.id === editingId)?.active ?? true)
+        : true,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    if (editingId) {
+      await db.collection("menuItems").doc(editingId).update(data);
+      message.textContent = "แก้ไขเมนูเรียบร้อยแล้ว";
+    } else {
+      data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection("menuItems").add(data);
+      message.textContent = "เพิ่มเมนูเรียบร้อยแล้ว";
+    }
+
+    resetForm();
+    await loadMenus();
+
+  } catch (error) {
+    message.textContent = "บันทึกไม่สำเร็จ: " + error.message;
+  }
+}
+
+function editMenu(id) {
+  const menu = allMenus.find(item => item.id === id);
+  if (!menu) return;
+
+  editingId = id;
+  currentImage = menu.image || "";
+
+  document.getElementById("menuName").value = menu.name || "";
+  document.getElementById("menuPrice").value = menu.price || "";
+  document.getElementById("menuCategory").value = menu.category || "other";
+  document.getElementById("formTitle").textContent = "✏️ แก้ไขเมนู";
+
+  const preview = document.getElementById("preview");
+
+  if (currentImage) {
+    preview.src = currentImage;
+    preview.style.display = "block";
+  } else {
+    preview.style.display = "none";
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+async function toggleMenu(id) {
+  const menu = allMenus.find(item => item.id === id);
+  if (!menu) return;
+
+  try {
+    await db.collection("menuItems").doc(id).update({
+      active: !menu.active,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    await loadMenus();
+  } catch (error) {
+    alert("เปลี่ยนสถานะไม่สำเร็จ: " + error.message);
+  }
+}
+
+function resetForm() {
+  editingId = null;
+  currentImage = "";
+
+  document.getElementById("menuName").value = "";
+  document.getElementById("menuPrice").value = "";
+  document.getElementById("menuCategory").value = "coffee";
+  document.getElementById("menuImage").value = "";
+  document.getElementById("preview").style.display = "none";
+  document.getElementById("formTitle").textContent = "➕ เพิ่มเมนูใหม่";
+  document.getElementById("formMessage").textContent = "";
+}
+
+async function importOldMenu() {
+  if (!Array.isArray(window.DEFAULT_MENU) || !window.DEFAULT_MENU.length) {
+    alert("ไม่พบเมนูเดิม กรุณาตรวจสอบ menu-defaults.js");
+    return;
+  }
+
+  if (!confirm("ต้องการนำเข้าเมนูเดิมทั้งหมดใช่ไหม?")) return;
+
+  try {
+    const snapshot = await db.collection("menuItems").get();
+    const existingIds = new Set(snapshot.docs.map(doc => doc.id));
+
+    const batch = db.batch();
+    let count = 0;
+
+    window.DEFAULT_MENU.forEach(menu => {
+      if (!existingIds.has(menu.id)) {
+        const ref = db.collection("menuItems").doc(menu.id);
+
+        batch.set(ref, {
+          name: menu.name,
+          price: menu.price,
+          category: menu.category || "other",
+          image: "",
+          active: true,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        count++;
+      }
+    });
+
+    if (count > 0) await batch.commit();
+
+    alert("นำเข้าเมนูเรียบร้อย " + count + " รายการ");
+    await loadMenus();
+
+  } catch (error) {
+    alert("นำเข้าไม่สำเร็จ: " + error.message);
+  }
+}
+</script>
+</body>
+</html>

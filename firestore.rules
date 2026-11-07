@@ -1,0 +1,206 @@
+rules_version = '2';
+
+service cloud.firestore {
+
+  match /databases/{database}/documents {
+
+
+    // ====================================================
+    // ตัวนับเลขออเดอร์รายวัน
+    // ====================================================
+
+    match /dailyCounters/{date} {
+
+      // ลูกค้าที่ล็อกอินแบบ Anonymous อ่านได้
+      allow read: if
+        request.auth != null;
+
+
+      // สร้างตัวนับครั้งแรก
+      allow create: if
+
+        request.auth != null
+
+        && request.resource.data.date == date
+
+        && request.resource.data.next == 2;
+
+
+      // เพิ่มเลขออเดอร์ทีละ 1
+      allow update: if
+
+        request.auth != null
+
+        && request.resource.data.date == date
+
+        && request.resource.data.next ==
+           resource.data.next + 1
+
+        && request.resource.data
+          .diff(resource.data)
+          .affectedKeys()
+          .hasOnly([
+            'next',
+            'date',
+            'updatedAt'
+          ]);
+
+
+      allow delete: if false;
+
+    }
+
+
+    // ====================================================
+    // Orders
+    // ====================================================
+
+    match /orders/{orderId} {
+
+
+      // ------------------------------------------------
+      // ลูกค้าสร้างออเดอร์ของตัวเอง
+      // ------------------------------------------------
+
+      allow create: if
+
+        request.auth != null
+
+        && request.resource.data.customerUid ==
+           request.auth.uid
+
+        && request.resource.data.status ==
+           'new'
+
+        && request.resource.data.orderNumber is int
+
+        && request.resource.data.orderNumber >= 1
+
+        && request.resource.data.orderNumber <= 999
+
+        && request.resource.data.orderDate is string
+
+        && request.resource.data.items is list
+
+        && request.resource.data.total is number;
+
+
+      // ------------------------------------------------
+      // อ่านออเดอร์
+      // ร้านอ่านทั้งหมด
+      // ลูกค้าอ่านเฉพาะออเดอร์ตัวเอง
+      // ------------------------------------------------
+
+      allow read: if
+
+        (
+          request.auth != null
+
+          && request.auth.token.email ==
+             'yanisakri98@gmail.com'
+        )
+
+        ||
+
+        (
+          request.auth != null
+
+          && resource.data.customerUid ==
+             request.auth.uid
+        );
+
+
+      // ------------------------------------------------
+      // ร้านเปลี่ยนสถานะ
+      // ------------------------------------------------
+
+      allow update: if
+
+  (
+    // ร้านเปลี่ยนสถานะออเดอร์
+
+    request.auth != null
+
+    && request.auth.token.email ==
+       'yanisakri98@gmail.com'
+
+    && request.resource.data
+      .diff(resource.data)
+      .affectedKeys()
+      .hasOnly([
+        'status',
+        'updatedAt'
+      ])
+
+    && request.resource.data.status
+      in [
+        'new',
+        'preparing',
+        'ready',
+        'closed'
+      ]
+  )
+
+  ||
+
+  (
+    // ลูกค้าแจ้งว่าชำระเงินแล้ว
+
+    request.auth != null
+
+    && resource.data.customerUid ==
+       request.auth.uid
+
+    && request.resource.data
+      .diff(resource.data)
+      .affectedKeys()
+      .hasOnly([
+        'paymentConfirmedByCustomer',
+        'updatedAt'
+      ])
+
+    && request.resource.data.paymentConfirmedByCustomer ==
+       true
+  );
+
+      // ------------------------------------------------
+      // ร้านลบออเดอร์
+      // ------------------------------------------------
+
+      allow delete: if
+
+        request.auth != null
+
+        && request.auth.token.email ==
+           'yanisakri98@gmail.com';
+
+    }
+      // ====================================================
+    // Menu Items
+    // ====================================================
+
+    match /menuItems/{menuId} {
+
+      // ลูกค้าทุกคนอ่านได้เฉพาะเมนูที่เปิดขาย
+      // เจ้าของร้านอ่านได้ทุกเมนู
+      allow read: if
+        (
+          resource.data.active == true
+        )
+        ||
+        (
+          request.auth != null
+          && request.auth.token.email ==
+             'yanisakri98@gmail.com'
+        );
+
+      // เฉพาะเจ้าของร้านเพิ่ม แก้ไข และลบเมนูได้
+      allow create, update, delete: if
+        request.auth != null
+        && request.auth.token.email ==
+           'yanisakri98@gmail.com';
+    }
+    
+  }
+
+}

@@ -1,0 +1,1533 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+>
+
+<title>ร้าน - ออเดอร์</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+
+  margin: 0;
+
+  background: #f3f3f3;
+
+  color: #222;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.wrap {
+
+  max-width: 1050px;
+
+  margin: auto;
+
+  padding: 18px;
+}
+
+.top {
+
+  background: #fff;
+
+  border-radius: 18px;
+
+  padding: 16px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  align-items: center;
+
+  box-shadow:
+    0 3px 14px rgba(0,0,0,.06);
+
+  margin-bottom: 14px;
+}
+
+h1 {
+
+  margin: 0;
+
+  font-size: 23px;
+}
+
+.muted {
+
+  font-size: 13px;
+
+  color: #777;
+}
+
+.login {
+
+  max-width: 440px;
+
+  background: #fff;
+
+  margin: 60px auto;
+
+  padding: 22px;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 4px 18px rgba(0,0,0,.07);
+}
+
+.label {
+
+  font-weight: 800;
+
+  font-size: 14px;
+
+  display: block;
+
+  margin-top: 12px;
+}
+
+.input {
+
+  width: 100%;
+
+  padding: 13px;
+
+  border:
+    1px solid #ccc;
+
+  border-radius: 12px;
+
+  font-size: 16px;
+
+  margin-top: 6px;
+}
+
+.btn {
+
+  border: 0;
+
+  border-radius: 12px;
+
+  padding: 11px 14px;
+
+  font-weight: 800;
+
+  font-size: 15px;
+
+  cursor: pointer;
+
+  background: #eee;
+}
+
+.dark {
+
+  background: #222;
+
+  color: #fff;
+}
+
+.green {
+
+  background: #1e7a40;
+
+  color: #fff;
+}
+
+.yellow {
+
+  background: #ffe7a8;
+
+  color: #5b4300;
+}
+
+.full {
+
+  width: 100%;
+}
+
+.msg {
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  margin: 12px 0;
+
+  font-size: 14px;
+}
+
+.error {
+
+  background: #ffe9e9;
+
+  color: #9b1c1c;
+}
+
+.success {
+
+  background: #e8f7ec;
+
+  color: #1a6a30;
+}
+
+.tabs {
+
+  display: flex;
+
+  gap: 8px;
+
+  flex-wrap: wrap;
+
+  margin-bottom: 14px;
+}
+
+.grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(300px, 1fr)
+    );
+
+  gap: 14px;
+}
+
+.order {
+
+  background: #fff;
+
+  border-radius: 18px;
+
+  padding: 16px;
+
+  box-shadow:
+    0 4px 16px rgba(0,0,0,.06);
+
+  border-left:
+    5px solid #ccc;
+}
+
+.order.new {
+
+  border-left-color:
+    #e5a400;
+}
+
+.order.preparing {
+
+  border-left-color:
+    #3577d4;
+}
+
+.order.ready {
+
+  border-left-color:
+    #278344;
+}
+
+.order.closed {
+
+  opacity: .65;
+}
+
+.head {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.no {
+
+  font-size: 28px;
+
+  font-weight: 950;
+}
+
+.time {
+
+  font-size: 12px;
+
+  color: #777;
+}
+
+.status {
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  padding: 5px 9px;
+
+  background: #eee;
+
+  border-radius: 999px;
+
+  height: max-content;
+}
+
+.row {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding: 7px 0;
+
+  border-bottom:
+    1px solid #eee;
+}
+
+.rows {
+
+  margin: 12px 0;
+}
+
+.total {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  font-size: 18px;
+
+  font-weight: 900;
+}
+
+.actions {
+
+  display: flex;
+
+  gap: 8px;
+
+  margin-top: 12px;
+}
+
+.actions .btn {
+
+  flex: 1;
+}
+
+.hidden {
+
+  display: none;
+}
+
+.empty {
+
+  background: #fff;
+
+  border-radius: 18px;
+
+  padding: 30px;
+
+  text-align: center;
+
+  color: #777;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<main class="wrap">
+
+
+<!-- LOGIN -->
+
+<section
+  id="login"
+  class="login"
+>
+
+  <h1>
+    เข้าสู่ระบบร้าน
+  </h1>
+
+  <div class="muted">
+    ใช้บัญชี Email/Password ที่สร้างไว้ใน Firebase
+  </div>
+
+
+  <div id="loginMsg"></div>
+
+
+  <label class="label">
+    อีเมล
+  </label>
+
+  <input
+    id="email"
+    class="input"
+    type="email"
+    autocomplete="username"
+  >
+
+
+  <label class="label">
+    รหัสผ่าน
+  </label>
+
+  <input
+    id="password"
+    class="input"
+    type="password"
+    autocomplete="current-password"
+  >
+
+
+  <button
+    id="loginBtn"
+    class="btn dark full"
+    style="margin-top:16px"
+  >
+    เข้าสู่ระบบ
+  </button>
+
+
+  <button
+    id="signupBtn"
+    class="btn full"
+    style="margin-top:8px"
+  >
+    สร้างบัญชีร้านครั้งแรก
+  </button>
+
+</section>
+
+
+<!-- APP -->
+
+<section
+  id="app"
+  class="hidden"
+>
+
+  <header class="top">
+
+    <div>
+
+      <h1>
+        ออเดอร์ร้าน
+      </h1>
+
+      <div
+        id="who"
+        class="muted"
+      ></div>
+
+    </div>
+
+
+    <button
+      id="logout"
+      class="btn"
+    >
+      ออกจากระบบ
+    </button>
+
+  </header>
+
+
+  <div class="tabs">
+
+    <button
+      class="btn yellow"
+      data-filter="new"
+    >
+      ออเดอร์ใหม่
+    </button>
+
+
+    <button
+      class="btn"
+      data-filter="preparing"
+    >
+      กำลังทำ
+    </button>
+
+
+    <button
+      class="btn"
+      data-filter="ready"
+    >
+      ทำเสร็จแล้ว
+    </button>
+
+
+    <button
+      class="btn"
+      data-filter="all"
+    >
+      ทั้งหมด
+    </button>
+
+  </div>
+<div style="margin-bottom:14px">
+  <button
+    id="enableNotifications"
+    class="btn dark"
+    type="button"
+  >
+    🔔 เปิดแจ้งเตือนออเดอร์บนมือถือ
+  </button>
+
+  <div
+    id="notificationMessage"
+    class="muted"
+    style="margin-top:8px"
+  ></div>
+</div>
+
+  <div id="shopMsg"></div>
+
+
+  <section
+    id="orders"
+    class="grid"
+  ></section>
+
+</section>
+
+</main>
+
+
+<!-- Firebase -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-messaging-compat.js"></script>
+
+<script src="firebase-config.js"></script>
+
+<script src="common.js"></script>
+
+
+<script>
+
+const login =
+  document.getElementById(
+    "login"
+  );
+
+const app =
+  document.getElementById(
+    "app"
+  );
+
+const loginMsg =
+  document.getElementById(
+    "loginMsg"
+  );
+
+const shopMsg =
+  document.getElementById(
+    "shopMsg"
+  );
+
+const email =
+  document.getElementById(
+    "email"
+  );
+
+const password =
+  document.getElementById(
+    "password"
+  );
+
+const loginBtn =
+  document.getElementById(
+    "loginBtn"
+  );
+
+const signupBtn =
+  document.getElementById(
+    "signupBtn"
+  );
+
+const logout =
+  document.getElementById(
+    "logout"
+  );
+
+const orders =
+  document.getElementById(
+    "orders"
+  );
+
+const who =
+  document.getElementById(
+    "who"
+  );
+
+
+let filter =
+  "new";
+
+
+let unsubscribe =
+  null;
+
+
+let first =
+  true;
+
+
+// ใส่อีเมลร้านให้อัตโนมัติ
+
+email.value =
+  window.SHOP_EMAIL || "";
+
+// ฟังก์ชันเล่นเสียง MP3 เมื่อมีออเดอร์ใหม่
+function playShopSound() {
+  const audio = new Audio("alert.mp3"); // 👈 ใส่ชื่อไฟล์ mp3 ของฝั่งร้านค้า
+  audio.play().catch(err => {
+    console.log("รอผู้ใช้แตะหน้าจอก่อนถึงจะอนุญาตให้ส่งเสียง:", err);
+  });
+}
+// --------------------------------------------------
+// ข้อความ
+// --------------------------------------------------
+
+function lm(
+  t,
+  c = "error"
+) {
+
+  loginMsg.innerHTML =
+    '<div class="msg ' +
+    c +
+    '">' +
+    esc(t) +
+    "</div>";
+
+}
+
+
+function sm(
+  t,
+  c = "error"
+) {
+
+  shopMsg.innerHTML =
+    '<div class="msg ' +
+    c +
+    '">' +
+    esc(t) +
+    "</div>";
+
+}
+
+
+// --------------------------------------------------
+// Firebase error
+// --------------------------------------------------
+
+function authErr(e) {
+
+  const m = {
+
+    "auth/invalid-email":
+      "อีเมลไม่ถูกต้อง",
+
+    "auth/user-not-found":
+      "ไม่พบบัญชีนี้",
+
+    "auth/wrong-password":
+      "รหัสผ่านไม่ถูกต้อง",
+
+    "auth/invalid-credential":
+      "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+
+    "auth/email-already-in-use":
+      "อีเมลนี้มีบัญชีแล้ว ให้กดเข้าสู่ระบบ",
+
+    "auth/weak-password":
+      "รหัสผ่านต้องมีอย่างน้อย 6 ตัว",
+
+    "auth/operation-not-allowed":
+      "ยังไม่ได้เปิด Email/Password ใน Firebase Authentication",
+
+    "auth/network-request-failed":
+      "เชื่อมต่อ Firebase ไม่สำเร็จ"
+
+  };
+
+
+  return (
+    m[e.code] ||
+    e.message ||
+    "เกิดข้อผิดพลาด"
+  );
+
+}
+
+
+// --------------------------------------------------
+// ตรวจอีเมลร้าน
+// --------------------------------------------------
+
+function allowedEmail(e) {
+
+  return (
+    !!window.SHOP_EMAIL &&
+    e.toLowerCase() ===
+      window.SHOP_EMAIL.toLowerCase()
+  );
+
+}
+
+
+// --------------------------------------------------
+// Login
+// --------------------------------------------------
+
+loginBtn.onclick =
+  async () => {
+
+    const e =
+      email.value.trim();
+
+
+    const p =
+      password.value;
+
+
+    if (!e || !p) {
+
+      return lm(
+        "กรุณากรอกอีเมลและรหัสผ่าน"
+      );
+
+    }
+
+
+    if (!allowedEmail(e)) {
+
+      return lm(
+        "อีเมลต้องตรงกับ SHOP_EMAIL ใน firebase-config.js"
+      );
+
+    }
+
+
+    loginBtn.disabled =
+      true;
+
+
+    try {
+
+      await auth
+        .signInWithEmailAndPassword(
+          e,
+          p
+        );
+
+
+    } catch (err) {
+
+      console.error(err);
+
+      lm(
+        authErr(err)
+      );
+
+
+    } finally {
+
+      loginBtn.disabled =
+        false;
+
+    }
+
+  };
+
+
+// --------------------------------------------------
+// สร้างบัญชี
+// --------------------------------------------------
+
+signupBtn.onclick =
+  async () => {
+
+    const e =
+      email.value.trim();
+
+
+    const p =
+      password.value;
+
+
+    if (!e || !p) {
+
+      return lm(
+        "กรุณากรอกอีเมลและรหัสผ่านก่อน"
+      );
+
+    }
+
+
+    if (!allowedEmail(e)) {
+
+      return lm(
+        "อีเมลต้องตรงกับ SHOP_EMAIL ใน firebase-config.js"
+      );
+
+    }
+
+
+    if (p.length < 6) {
+
+      return lm(
+        "รหัสผ่านต้องมีอย่างน้อย 6 ตัว"
+      );
+
+    }
+
+
+    signupBtn.disabled =
+      true;
+
+
+    try {
+
+      await auth
+        .createUserWithEmailAndPassword(
+          e,
+          p
+        );
+
+
+    } catch (err) {
+
+      console.error(err);
+
+      lm(
+        authErr(err)
+      );
+
+
+    } finally {
+
+      signupBtn.disabled =
+        false;
+
+    }
+
+  };
+
+
+// Logout
+
+logout.onclick =
+  () => auth.signOut();
+
+
+// --------------------------------------------------
+// Filter
+// --------------------------------------------------
+
+document
+  .querySelectorAll(
+    "[data-filter]"
+  )
+  .forEach(
+    b => {
+
+      b.onclick =
+        () => {
+
+          filter =
+            b.dataset.filter;
+
+          load();
+
+        };
+
+    }
+  );
+
+
+// --------------------------------------------------
+// โหลดออเดอร์
+// --------------------------------------------------
+
+function load() {
+
+  if (unsubscribe) {
+
+    unsubscribe();
+
+  }
+
+
+  first =
+    true;
+
+
+  unsubscribe =
+    db
+      .collection("orders")
+      .orderBy(
+        "createdAt",
+        "desc"
+      )
+      .limit(100)
+      .onSnapshot(
+
+        snapshot => {
+
+          let list =
+            snapshot.docs.map(
+              d => ({
+                id:
+                  d.id,
+
+                ...d.data()
+
+              })
+            );
+
+
+          // filter
+
+          list =
+            list.filter(
+              o => {
+
+                if (
+                  filter ===
+                  "all"
+                ) {
+
+                  return true;
+
+                }
+
+
+                return (
+                  o.status ===
+                  filter
+                );
+
+              }
+            );
+
+
+          render(list);
+
+
+          // เสียงแจ้งเตือน
+          if (
+            !first &&
+            snapshot
+              .docChanges()
+              .some(
+                c =>
+                  c.type ===
+                  "added"
+              )
+          ) {
+
+            playShopSound();
+
+            sm(
+              "มีออเดอร์ใหม่เข้ามา",
+              "success"
+            );
+
+          }
+
+
+          first =
+            false;
+
+        },
+
+        error => {
+
+          console.error(error);
+
+          sm(
+            "อ่านออเดอร์ไม่ได้: " +
+            error.message
+          );
+
+        }
+
+      );
+
+}
+
+
+// --------------------------------------------------
+// แสดงออเดอร์
+// --------------------------------------------------
+
+// --------------------------------------------------
+// แสดงออเดอร์
+// --------------------------------------------------
+
+function render(list) {
+
+  if (!list.length) {
+
+    orders.innerHTML =
+      '<div class="empty">' +
+      "ยังไม่มีออเดอร์ในหมวดนี้" +
+      "</div>";
+
+    return;
+
+  }
+
+
+  orders.innerHTML =
+    list.map(
+      o => {
+
+        let action = "";
+
+
+        if (
+          o.status ===
+          "new"
+        ) {
+
+          action = `
+
+            <button
+              class="btn dark"
+              data-action="preparing"
+              data-id="${o.id}"
+            >
+              รับออเดอร์ / เริ่มทำ
+            </button>
+
+          `;
+
+        }
+
+
+        else if (
+          o.status ===
+          "preparing"
+        ) {
+
+          action = `
+
+            <button
+              class="btn green"
+              data-action="ready"
+              data-id="${o.id}"
+            >
+              ทำเสร็จแล้ว
+            </button>
+
+          `;
+
+        }
+
+
+        else if (
+          o.status ===
+          "ready"
+        ) {
+
+          action = `
+
+            <button
+              class="btn"
+              data-action="closed"
+              data-id="${o.id}"
+            >
+              ปิดออเดอร์
+            </button>
+
+          `;
+
+        }
+
+
+        return `
+
+          <article
+            class="order ${esc(
+              o.status || ""
+            )}"
+          >
+
+            <div class="head">
+
+              <div>
+
+                <div class="no">
+
+                #
+                ${String(
+                  o.orderNumber || 0
+                ).padStart(3, "0")}
+
+              </div>
+
+              <div
+                style="
+                  font-size:16px;
+                  font-weight:800;
+                  margin-top:2px
+                "
+              >
+                ลูกค้า: ${esc(o.customerName || "-")}
+              </div>
+
+              <!-- 📍 แสดงที่อยู่ / เลขโต๊ะ (เพิ่มใหม่) -->
+              ${
+                o.customerAddress
+                  ? `
+                    <div
+                      style="
+                        font-size:14px;
+                        font-weight:700;
+                        margin-top:3px;
+                        color:#333;
+                      "
+                    >
+                      📍 ${esc(o.customerAddress)}
+                    </div>
+                  `
+                  : ""
+              }
+
+              <div
+                style="
+                  font-size:14px;
+                  margin-top:3px;
+                  color:#666;
+                "
+              >
+                ชำระ:
+                ${
+                  o.paymentMethod === "cash"
+                    ? "💵 เงินสด"
+                    : "📱 สแกนจ่าย QR"
+                }
+              </div>
+
+              <div
+                style="
+                  font-size:14px;
+                  margin-top:3px;
+                  font-weight:800;
+                "
+              >
+                ${
+                  o.paymentConfirmedByCustomer
+                    ? "✅ ลูกค้าแจ้งว่าชำระแล้ว"
+                    : "⏳ รอชำระเงิน"
+                }
+              </div>
+
+                <div class="time">
+
+                  ${esc(
+                    timeText(
+                      o.createdAt
+                    )
+                  )}
+
+                </div>
+
+              </div>
+
+
+              <div class="status">
+
+                ${esc(
+                  STATUS_TEXT[
+                    o.status
+                  ] ||
+                  o.status ||
+                  ""
+                )}
+
+              </div>
+
+            </div>
+
+
+            <div class="rows">
+
+              ${
+                (o.items || [])
+                  .map(
+                    x => {
+                      // ดึงรายละเอียดออปชัน (ความหวาน / ช็อต / ท็อปปิ้ง / ขนมปัง)
+                      let opts = [];
+                      if (x.sweetness !== null && x.sweetness !== undefined) {
+                        opts.push(`หวาน ${x.sweetness}%`);
+                      }
+                      if (x.shots) {
+                        opts.push(`+${x.shots} ช็อต`);
+                      }
+                      if (x.toppings && x.toppings.length) {
+                        opts.push(x.toppings.map(t => t.name).join(", "));
+                      }
+                      if (x.breadOptions && x.breadOptions.length) {
+                        opts.push(x.breadOptions.map(b => b.name).join(", "));
+                      }
+
+                      const detailStr = opts.join(" · ");
+
+                      return `
+                        <div class="row" style="flex-direction: column; align-items: flex-start; padding: 8px 0;">
+                          <div style="display: flex; justify-content: space-between; width: 100%;">
+                            <span>
+                              ${esc(x.name)} ×${x.qty}
+                            </span>
+                            <strong>
+                              ${baht(x.lineTotal)}
+                            </strong>
+                          </div>
+
+                          ${
+                            detailStr
+                              ? `
+                                <div style="font-size: 12px; color: #666; margin-top: 3px;">
+                                  • ${esc(detailStr)}
+                                </div>
+                              `
+                              : ""
+                          }
+                        </div>
+                      `;
+                    }
+                  )
+                  .join("")
+              }
+
+            </div>
+
+
+            <div class="total">
+
+              <span>
+                รวม
+              </span>
+
+              <span>
+                ${baht(o.total)}
+              </span>
+
+            </div>
+
+
+            <div class="actions">
+
+              ${action}
+
+            </div>
+
+          </article>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+// --------------------------------------------------
+// เปลี่ยนสถานะ
+// --------------------------------------------------
+
+orders.addEventListener(
+  "click",
+  async e => {
+
+    const b =
+      e.target.closest(
+        "button[data-action]"
+      );
+
+
+    if (!b) {
+      return;
+    }
+
+
+    b.disabled =
+      true;
+
+
+    try {
+
+      await db
+        .collection("orders")
+        .doc(
+          b.dataset.id
+        )
+        .update({
+
+          status:
+            b.dataset.action,
+
+          updatedAt:
+            firebase.firestore
+              .FieldValue
+              .serverTimestamp()
+
+        });
+
+
+      if (
+        b.dataset.action ===
+        "ready"
+      ) {
+
+        beep();
+
+      }
+
+
+    } catch (err) {
+
+      console.error(err);
+
+
+      sm(
+        "เปลี่ยนสถานะไม่สำเร็จ: " +
+        err.message
+      );
+
+
+      b.disabled =
+        false;
+
+    }
+
+  }
+);
+
+
+const enableNotifications =
+  document.getElementById("enableNotifications");
+
+const notificationMessage =
+  document.getElementById("notificationMessage");
+
+enableNotifications.addEventListener("click", async () => {
+  try {
+    const user = firebase.auth().currentUser;
+
+    if (!user) {
+      notificationMessage.textContent =
+        "กรุณาเข้าสู่ระบบร้านก่อน";
+      return;
+    }
+
+    if (!("serviceWorker" in navigator) ||
+        !("Notification" in window)) {
+      notificationMessage.textContent =
+        "เบราว์เซอร์นี้ไม่รองรับ Push Notification";
+      return;
+    }
+
+    if (!(await firebase.messaging.isSupported())) {
+      notificationMessage.textContent =
+        "อุปกรณ์หรือเบราว์เซอร์นี้ไม่รองรับ Firebase Messaging";
+      return;
+    }
+
+    enableNotifications.disabled = true;
+
+    const permission =
+      await Notification.requestPermission();
+
+    if (permission !== "granted") {
+      throw new Error(
+        "คุณยังไม่ได้อนุญาตการแจ้งเตือน"
+      );
+    }
+
+    const registration =
+      await navigator.serviceWorker.register(
+        "/firebase-messaging-sw.js"
+      );
+
+    await navigator.serviceWorker.ready;
+
+    const messaging = firebase.messaging();
+
+    const token = await messaging.getToken({
+      vapidKey: "BFYWbEq6lxM9UfKOX3LyQp9kAlMHRgk0jvV0W3tLTKr_UBKoUkKP1F2P5e-5AUs5_pEd-rHIIW0S1cdvPlOcdvc",
+      serviceWorkerRegistration: registration
+    });
+
+    if (!token) {
+      throw new Error(
+        "สร้าง FCM token ไม่สำเร็จ"
+      );
+    }
+
+    await firebase.firestore()
+      .collection("shopDevices")
+      .doc(user.uid)
+      .set({
+        token: token,
+        updatedAt:
+          firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+
+    // ปลดล็อกเสียงจากการแตะหน้าจอ
+    const audio = new Audio("alert.mp3");
+    audio.volume = 0.01;
+    await audio.play();
+    audio.pause();
+    audio.currentTime = 0;
+
+    notificationMessage.textContent =
+      "เปิดรับแจ้งเตือนแล้ว ✅";
+
+    // รับข้อความเมื่อเปิดหน้าเว็บร้านอยู่
+    messaging.onMessage(async (payload) => {
+      notificationMessage.textContent =
+        payload.data?.body ||
+        "มีออเดอร์ใหม่เข้ามา";
+
+      playShopSound();
+
+      if ("Notification" in window &&
+          Notification.permission === "granted") {
+        await registration.showNotification(
+          payload.data?.title || "🔔 มีออเดอร์ใหม่!",
+          {
+            body:
+              payload.data?.body ||
+              "มีรายการสั่งอาหารเข้ามา",
+            tag: "kio-new-order"
+          }
+        );
+      }
+    });
+
+  } catch (error) {
+    console.error("Notification setup:", error);
+
+    notificationMessage.textContent =
+      "ตั้งค่าไม่สำเร็จ: " + error.message;
+
+  } finally {
+    enableNotifications.disabled = false;
+  }
+});
+
+// --------------------------------------------------
+// Auth State
+// --------------------------------------------------
+
+auth.onAuthStateChanged(
+  user => {
+
+    if (!user) {
+
+      login.classList.remove(
+        "hidden"
+      );
+
+      app.classList.add(
+        "hidden"
+      );
+
+
+      if (unsubscribe) {
+
+        unsubscribe();
+
+      }
+
+
+      unsubscribe =
+        null;
+
+
+      return;
+
+    }
+
+
+    // ต้องเป็นอีเมลร้านเท่านั้น
+
+    if (
+      !allowedEmail(
+        user.email || ""
+      )
+    ) {
+
+      auth.signOut();
+
+
+      lm(
+        "บัญชีนี้ไม่ตรงกับ SHOP_EMAIL"
+      );
+
+
+      return;
+
+    }
+
+
+    login.classList.add(
+      "hidden"
+    );
+
+
+    app.classList.remove(
+      "hidden"
+    );
+
+
+    who.textContent =
+      user.email;
+
+
+    load();
+
+  }
+);
+
+</script>
+
+</body>
+</html>

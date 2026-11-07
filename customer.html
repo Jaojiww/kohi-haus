@@ -1,0 +1,2326 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
+
+<title>KOHI Haus Coffee (หน้าร้าน)</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f6f6f6;
+  color: #222;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: auto;
+  padding: 14px 14px 120px;
+}
+
+.head {
+  background: #fff;
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 12px;
+
+  box-shadow:
+    0 3px 14px rgba(0,0,0,.06);
+}
+
+h1 {
+  margin: 0 0 5px;
+  font-size: 25px;
+}
+
+.sub {
+  color: #777;
+  font-size: 14px;
+}
+
+.field {
+  margin-top: 15px;
+}
+
+.field label {
+  display: block;
+  font-weight: 800;
+  margin-bottom: 7px;
+}
+
+.field input[type="text"] {
+  width: 100%;
+  height: 48px;
+  border: 1px solid #d4d4d4;
+  border-radius: 12px;
+  padding: 0 14px;
+  font-size: 16px;
+  outline: none;
+}
+
+.field input:focus {
+  border-color: #222;
+}
+
+.category-wrap {
+  overflow-x: auto;
+  margin: 12px 0;
+  padding-bottom: 3px;
+
+  scrollbar-width: thin;
+}
+
+.categories {
+  display: flex;
+  gap: 8px;
+  width: max-content;
+}
+
+.category-btn {
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #444;
+
+  padding: 10px 15px;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  box-shadow:
+    0 2px 9px rgba(0,0,0,.05);
+}
+
+.category-btn.active {
+  background: #222;
+  color: #fff;
+}
+
+.section-title {
+  font-size: 19px;
+  font-weight: 900;
+  margin: 13px 2px 9px;
+}
+
+.item {
+  background: #fff;
+  border-radius: 17px;
+  padding: 15px;
+  margin: 9px 0;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  box-shadow:
+    0 2px 11px rgba(0,0,0,.05);
+}
+
+.item-image {
+  width: 85px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #f0f0f0;
+  flex-shrink: 0;
+}
+
+.item-no-image {
+  width: 85px;
+  height: 85px;
+  border-radius: 12px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: 17px;
+  font-weight: 850;
+}
+
+.price {
+  margin-top: 5px;
+  font-weight: 800;
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty button {
+  width: 42px;
+  height: 42px;
+
+  border: 0;
+  border-radius: 12px;
+
+  background: #ededed;
+
+  font-size: 22px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.qty span {
+  width: 22px;
+  text-align: center;
+  font-weight: 900;
+}
+
+.empty-category {
+  background: #fff;
+  border-radius: 17px;
+  padding: 25px;
+  text-align: center;
+  color: #777;
+
+  box-shadow:
+    0 2px 11px rgba(0,0,0,.05);
+}
+
+.cart {
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px;
+  margin-top: 16px;
+
+  box-shadow:
+    0 3px 14px rgba(0,0,0,.06);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 8px 0;
+
+  border-bottom: 1px solid #eee;
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 10px;
+
+  font-size: 19px;
+  font-weight: 900;
+}
+
+.bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  background:
+    rgba(255,255,255,.97);
+
+  border-top: 1px solid #ddd;
+
+  padding:
+    10px 14px
+    calc(10px + env(safe-area-inset-bottom));
+}
+
+.bottom-in {
+  max-width: 720px;
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.summary {
+  flex: 1;
+}
+
+.summary strong {
+  display: block;
+  font-size: 18px;
+}
+
+.summary small {
+  color: #777;
+}
+
+.submit {
+  border: 0;
+  border-radius: 13px;
+
+  background: #222;
+  color: #fff;
+
+  padding: 13px 17px;
+
+  font-size: 16px;
+  font-weight: 850;
+
+  cursor: pointer;
+}
+
+.submit:disabled {
+  opacity: .55;
+}
+
+.msg {
+  padding: 12px;
+  border-radius: 12px;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.error {
+  background: #ffe9e9;
+  color: #9b1c1c;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.options {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f7f7f7;
+  border-radius: 12px;
+}
+
+.option-label {
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.option-select {
+  width: 100%;
+  height: 42px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+  padding: 0 10px;
+  font-size: 14px;
+}
+
+.option-row {
+  margin-top: 9px;
+}
+
+/* ================================
+   ตัวเลือกเมนู
+================================ */
+
+.option-box {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.option-box.show {
+  display: flex;
+}
+
+.option-panel {
+  width: 100%;
+  max-width: 720px;
+  background: #fff;
+  border-radius: 22px 22px 0 0;
+  padding: 20px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.option-title {
+  font-size: 21px;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.option-price {
+  color: #666;
+  margin-bottom: 18px;
+}
+
+.option-group {
+  margin-bottom: 17px;
+}
+
+.option-group-title {
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.option-select {
+  width: 100%;
+  height: 46px;
+  border: 1px solid #d5d5d5;
+  border-radius: 12px;
+  padding: 0 12px;
+  font-size: 16px;
+  background: #fff;
+}
+
+.topping-list {
+  display: grid;
+  gap: 8px;
+}
+
+.topping-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+}
+
+.topping-option input {
+  width: 18px;
+  height: 18px;
+}
+
+.option-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.option-cancel {
+  flex: 1;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 13px;
+  padding: 13px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.option-confirm {
+  flex: 1;
+  border: 0;
+  background: #222;
+  color: #fff;
+  border-radius: 13px;
+  padding: 13px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.cart-edit {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+}
+
+.cart-edit button {
+  border: 0;
+  border-radius: 8px;
+  padding: 5px 9px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background: #eee;
+}
+
+.delete-btn {
+  background: #ffe5e5;
+  color: #a00;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<main class="wrap">
+
+  <!-- HEADER -->
+
+  <!-- HEADER -->
+
+  <section class="head">
+
+    <h1>
+      สั่งอาหารที่ร้าน
+    </h1>
+
+    <div class="sub">
+      เลือกเมนูที่ต้องการ แล้วกดยืนยันสั่งอาหาร
+    </div>
+
+    <!-- ช่องใส่ชื่อลูกค้า -->
+    <div class="field">
+
+      <label for="customerName">
+        ชื่อลูกค้า
+      </label>
+
+      <input
+        id="customerName"
+        type="text"
+        maxlength="40"
+        autocomplete="name"
+        placeholder="เช่น คุณเอ"
+      >
+
+    </div>
+
+    <!-- ช่องใส่ที่อยู่ / เลขโต๊ะ (เพิ่มเข้ามาใหม่) -->
+    <div class="field">
+
+      <label for="customerAddress">
+        ที่อยู่ / หมายเหตุสถานที่
+      </label>
+
+      <input
+        id="customerAddress"
+        type="text"
+        maxlength="150"
+        placeholder="เช่น บ้านเลขที่ 123/4..."
+      >
+
+    </div>
+
+    <!-- เลือกวิธีชำระเงิน (ปรับปุ่มไปชิดขวา) -->
+    <div class="field">
+
+      <label>
+        วิธีชำระเงิน
+      </label>
+
+      <div style="display:grid; gap:8px;">
+
+        <label style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 13px 16px;
+          border: 1px solid #ddd;
+          border-radius: 12px;
+          cursor: pointer;
+        ">
+          <span style="font-size: 16px; font-weight: 600;">
+            💵 เงินสด
+          </span>
+
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="cash"
+            checked
+            style="width: 20px; height: 20px; cursor: pointer; accent-color: #222;"
+          >
+        </label>
+
+        <label style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 13px 16px;
+          border: 1px solid #ddd;
+          border-radius: 12px;
+          cursor: pointer;
+        ">
+          <span style="font-size: 16px; font-weight: 600;">
+            📱 สแกนจ่าย QR
+          </span>
+
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="promptpay"
+            style="width: 20px; height: 20px; cursor: pointer; accent-color: #222;"
+          >
+        </label>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <div id="message"></div>
+
+
+  <!-- หมวดหมู่ -->
+
+  <div class="category-wrap">
+
+    <div
+      id="categories"
+      class="categories"
+    ></div>
+
+  </div>
+
+
+  <div
+    id="sectionTitle"
+    class="section-title"
+  >
+    เมนูทั้งหมด
+  </div>
+
+
+  <!-- เมนู -->
+
+  <section id="menu"></section>
+
+
+  <!-- ตะกร้า -->
+
+  <section
+    id="cart"
+    class="cart hidden"
+  >
+
+    <div
+      style="
+        font-size:19px;
+        font-weight:900;
+        margin-bottom:7px
+      "
+    >
+      รายการที่เลือก
+    </div>
+
+    <div id="cartRows"></div>
+
+    <div class="total">
+
+      <span>
+        รวม
+      </span>
+
+      <span id="total">
+        0 บาท
+      </span>
+
+    </div>
+
+  </section>
+
+  <!-- ================================
+     หน้าต่างเลือกเมนู
+================================ -->
+
+<div
+  id="optionBox"
+  class="option-box"
+>
+
+  <div class="option-panel">
+
+    <div
+      id="optionTitle"
+      class="option-title"
+    >
+      เลือกเมนู
+    </div>
+
+    <div
+      id="optionPrice"
+      class="option-price"
+    >
+      0 บาท
+    </div>
+
+
+    <!-- ความหวาน -->
+
+    <div
+      id="sweetnessGroup"
+      class="option-group"
+    >
+
+      <div class="option-group-title">
+        ระดับความหวาน
+      </div>
+
+      <select
+        id="sweetnessSelect"
+        class="option-select"
+      >
+
+        <option value="0">
+          0% ไม่หวาน
+        </option>
+
+        <option value="25">
+          25% หวานน้อย
+        </option>
+
+        <option value="50">
+          50% หวานน้อย
+        </option>
+        
+        <option value="100" selected>
+          100% หวานปกติ
+        </option>
+
+        <option value="125">
+          125% หวานมาก
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- ช็อต -->
+
+    <div
+      id="shotGroup"
+      class="option-group"
+    >
+
+      <div class="option-group-title">
+        เพิ่มช็อต
+      </div>
+
+      <select
+        id="shotSelect"
+        class="option-select"
+      >
+
+        <option value="0">
+          ไม่เพิ่มช็อต
+        </option>
+
+        <option value="1">
+          +1 ช็อต (+15 บาท)
+        </option>
+
+        <option value="1">
+          เปลี่ยนเป็นนมโอ๊ต (+15 บาท)
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- ท็อปปิ้ง -->
+
+    <div
+      id="toppingGroup"
+      class="option-group"
+    >
+
+      <div class="option-group-title">
+        เพิ่มท็อปปิ้ง
+      </div>
+
+      <div
+        id="toppingList"
+        class="topping-list"
+      ></div>
+
+    </div>
+
+
+    <div class="option-buttons">
+
+      <button
+        id="optionCancel"
+        type="button"
+        class="option-cancel"
+      >
+        ยกเลิก
+      </button>
+
+      <button
+        id="optionConfirm"
+        type="button"
+        class="option-confirm"
+      >
+        เพิ่มลงตะกร้า
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+</main>
+
+
+<!-- ปุ่มด้านล่าง -->
+
+<div
+  id="bottom"
+  class="bottom hidden"
+>
+
+  <div class="bottom-in">
+
+    <div class="summary">
+
+      <strong id="bottomTotal">
+        0 บาท
+      </strong>
+
+      <small id="bottomCount">
+        0 รายการ
+      </small>
+
+    </div>
+
+    <button
+      id="submit"
+      class="submit"
+    >
+      ยืนยันสั่งอาหาร
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- Firebase -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+<script src="firebase-config.js"></script>
+
+<script src="common.js"></script>
+
+
+<script>
+
+
+// ======================================================
+// เมนู
+// ======================================================
+
+let MENU = [];
+
+// ======================================================
+// หมวดหมู่
+// ======================================================
+
+const CATEGORIES = [
+
+  {
+    id: "all",
+    name: "ทั้งหมด"
+  },
+
+  {
+    id: "coffee",
+    name: "☕ กาแฟ"
+  },
+
+  {
+    id: "matcha",
+    name: "🍵 มัทฉะ"
+  },
+
+  {
+    id: "tea",
+    name: "🫖 ชา"
+  },
+
+  {
+    id: "milk",
+    name: "🥛 นม / ช็อกโกแลต"
+  },
+
+  {
+    id: "bread",
+    name: "🍞 ขนมปัง"
+  },
+
+  {
+    id: "sandwich",
+    name: "🥪 แซนวิช"
+  }
+];
+
+
+let activeCategory = "all";
+let cart = {};
+
+// ==========================================
+// ราคาท็อปปิ้ง
+// ==========================================
+
+const TOPPINGS = [
+  {
+    id: "separate ice",
+    name: "แยกน้ำแข็ง",
+    price: 5
+  },
+  {
+    id: "extra ice",
+    name: "เพิ่มน้ำแข็ง",
+    price: 5
+  }
+];
+
+// ======================================================
+// Elements
+// ======================================================
+
+const menuEl =
+  document.getElementById("menu");
+
+const categoriesEl =
+  document.getElementById("categories");
+
+const sectionTitleEl =
+  document.getElementById("sectionTitle");
+
+const cartEl =
+  document.getElementById("cart");
+
+const cartRows =
+  document.getElementById("cartRows");
+
+const totalEl =
+  document.getElementById("total");
+
+const bottom =
+  document.getElementById("bottom");
+
+const bottomTotal =
+  document.getElementById("bottomTotal");
+
+const bottomCount =
+  document.getElementById("bottomCount");
+
+const submit =
+  document.getElementById("submit");
+
+const messageEl =
+  document.getElementById("message");
+
+const customerNameInput =
+  document.getElementById(
+    "customerName"
+  );
+  const customerAddressInput =
+  document.getElementById(
+    "customerAddress"
+  );
+  
+  const optionBox =
+  document.getElementById(
+    "optionBox"
+  );
+
+const optionTitle =
+  document.getElementById(
+    "optionTitle"
+  );
+
+const optionPrice =
+  document.getElementById(
+    "optionPrice"
+  );
+
+const sweetnessSelect =
+  document.getElementById(
+    "sweetnessSelect"
+  );
+
+const shotSelect =
+  document.getElementById(
+    "shotSelect"
+  );
+
+const toppingList =
+  document.getElementById(
+    "toppingList"
+  );
+
+const optionCancel =
+  document.getElementById(
+    "optionCancel"
+  );
+
+const optionConfirm =
+  document.getElementById(
+    "optionConfirm"
+  );
+
+const sweetnessGroup =
+  document.getElementById(
+    "sweetnessGroup"
+  );
+
+const shotGroup =
+  document.getElementById(
+    "shotGroup"
+  );
+
+const toppingGroup =
+  document.getElementById(
+    "toppingGroup"
+  );
+
+let editingKey = null;
+let editingItemId = null;
+
+
+// ======================================================
+// แจ้งเตือน
+// ======================================================
+
+function message(
+  text,
+  type = "error"
+) {
+
+  messageEl.innerHTML =
+    '<div class="msg ' +
+    type +
+    '">' +
+    esc(text) +
+    '</div>';
+
+}
+
+
+// ======================================================
+// สร้างหมวดหมู่
+// ======================================================
+
+function renderCategories() {
+
+  categoriesEl.innerHTML =
+    CATEGORIES.map(
+      category => `
+
+        <button
+          type="button"
+          class="category-btn ${
+            activeCategory === category.id
+              ? "active"
+              : ""
+          }"
+          data-category="${category.id}"
+        >
+          ${category.name}
+        </button>
+
+      `
+    ).join("");
+
+}
+
+
+// ======================================================
+// แสดงชื่อหมวด
+// ======================================================
+
+function categoryTitle() {
+
+  const item =
+    CATEGORIES.find(
+      x => x.id === activeCategory
+    );
+
+  return item
+    ? item.name
+    : "เมนู";
+
+}
+
+
+// ======================================================
+// แสดงเมนู
+// ======================================================
+
+function isDrink(item) {
+  return [
+    "coffee",
+    "matcha",
+    "tea",
+    "milk"
+  ].includes(item.category);
+}
+
+function isCoffee(item) {
+  return item.category === "coffee";
+}
+
+// ฟังก์ชันคำนวณจำนวนเมนูนี้ที่มีอยู่ในตะกร้า
+function getItemQty(itemId) {
+  return Object.values(cart).reduce((sum, item) => {
+    if (item && item.itemId === itemId) {
+      return sum + Number(item.qty || 0);
+    }
+    return sum;
+  }, 0);
+}
+
+// ฟังก์ชันแสดงรายการเมนู (ปรับปรุงให้นับจำนวนจากตะกร้าจริง)
+function renderMenu() {
+
+  const list =
+    activeCategory === "all"
+      ? MENU
+      : MENU.filter(
+          item =>
+            item.category ===
+            activeCategory
+        );
+
+
+  sectionTitleEl.textContent =
+    categoryTitle();
+
+
+  if (!list.length) {
+
+    menuEl.innerHTML =
+      '<div class="empty-category">' +
+      'ยังไม่มีเมนูในหมวดนี้' +
+      '</div>';
+
+    return;
+  }
+
+
+  menuEl.innerHTML =
+    list.map(item => {
+
+      // ดึงจำนวนจริงในตะกร้าของเมนูนี้
+      const currentQty = getItemQty(item.id);
+
+     return `
+  <article class="item">
+
+    ${
+      item.image
+        ? `<img
+             class="item-image"
+             src="${esc(item.image)}"
+             alt="${esc(item.name)}"
+             loading="lazy"
+           >`
+        : `<div class="item-no-image">ไม่มีรูปภาพ</div>`
+    }
+
+    <div class="info">
+      
+            <div class="name">
+              ${esc(item.name)}
+            </div>
+
+            <div class="price">
+              ${baht(item.price)}
+            </div>
+
+          </div>
+
+          <div class="qty">
+
+            <button
+              type="button"
+              data-action="minus"
+              data-id="${item.id}"
+            >
+              −
+            </button>
+
+            <span>
+              ${currentQty}
+            </span>
+
+            <button
+              type="button"
+              data-action="plus"
+              data-id="${item.id}"
+            >
+              +
+            </button>
+
+          </div>
+
+        </article>
+      `;
+
+    }).join("");
+}
+// ======================================================
+// กด + / - ที่เมนู
+// ======================================================
+
+menuEl.addEventListener(
+  "click",
+  event => {
+
+    const button =
+      event.target.closest(
+        "[data-action]"
+      );
+
+    if (!button) {
+      return;
+    }
+
+    const action =
+      button.dataset.action;
+
+    const itemId =
+      button.dataset.id;
+
+    const item =
+      MENU.find(
+        x => x.id === itemId
+      );
+
+    if (!item) {
+      return;
+    }
+
+    // =========================
+    // กด +
+    // =========================
+
+    if (action === "plus") {
+
+      // เปิดหน้าต่างเลือก
+      // ความหวาน / ช็อต / ท็อปปิ้ง
+      openItemOptions(itemId);
+
+      return;
+    }
+
+    // =========================
+    // กด -
+    // =========================
+
+    if (action === "minus") {
+
+      // หารายการในตะกร้าที่เป็น
+      // เมนูเดียวกันและไม่มีตัวเลือกพิเศษ
+      const key =
+        Object.keys(cart).find(
+          key => {
+
+            const data =
+              cart[key];
+
+            return (
+              data &&
+              data.itemId === itemId &&
+              data.sweetness === (
+                isDrink(item)
+                  ? "100"
+                  : null
+              ) &&
+              Number(data.shots || 0) === 0 &&
+              (!data.toppings ||
+                data.toppings.length === 0)
+            );
+
+          }
+        );
+
+      if (!key) {
+        return;
+      }
+
+      cart[key].qty--;
+
+      if (cart[key].qty <= 0) {
+        delete cart[key];
+      }
+
+      updateCart();
+
+    }
+
+  }
+);
+
+
+function openItemOptions(
+  itemId,
+  editKey = null
+) {
+
+  const item =
+    MENU.find(
+      x => x.id === itemId
+    );
+
+  if (!item) {
+    return;
+  }
+
+
+  editingKey =
+    editKey;
+
+  editingItemId =
+    itemId;
+
+
+  const old =
+    editKey !== null &&
+    cart[editKey]
+      ? cart[editKey]
+      : null;
+
+
+  optionTitle.textContent =
+    item.name;
+
+
+  sweetnessSelect.value =
+    old?.sweetness ||
+    "100";
+
+
+  shotSelect.value =
+    String(
+      old?.shots || 0
+    );
+
+
+  toppingList.innerHTML =
+    TOPPINGS.map(
+      topping => {
+
+        const checked =
+          old?.toppings?.some(
+            x =>
+              x.id ===
+              topping.id
+          )
+            ? "checked"
+            : "";
+
+        return `
+          <label
+            class="topping-option"
+          >
+
+            <input
+              type="checkbox"
+              value="${topping.id}"
+              data-topping
+              ${checked}
+            >
+
+            <span>
+              ${esc(topping.name)}
+              (+${topping.price} บาท)
+            </span>
+
+          </label>
+        `;
+
+      }
+    ).join("");
+
+
+  // ขนมปังไม่ต้องเลือกความหวาน/ช็อต
+  if (isDrink(item)) {
+
+    sweetnessGroup.style.display =
+      "block";
+
+  } else {
+
+    sweetnessGroup.style.display =
+      "none";
+
+  }
+
+
+  // ช็อตเฉพาะกาแฟ
+  if (isCoffee(item)) {
+
+    shotGroup.style.display =
+      "block";
+
+  } else {
+
+    shotGroup.style.display =
+      "none";
+
+  }
+
+
+  // ตอนนี้เปิดท็อปปิ้งให้ทุกเมนูก่อน
+  // แสดงท็อปปิ้งเฉพาะเมนูเครื่องดื่ม (ขนมปังจะไม่แสดง)
+  if (isDrink(item)) {
+
+    toppingGroup.style.display =
+      "block";
+
+  } else {
+
+    toppingGroup.style.display =
+      "none";
+
+  }
+
+  updateOptionPrice();
+
+
+  optionConfirm.textContent =
+    editKey === null
+      ? "เพิ่มลงตะกร้า"
+      : "บันทึกการแก้ไข";
+
+
+  optionBox.classList.add(
+    "show"
+  );
+}
+function getSelectedToppings() {
+
+  const selected = [];
+
+  document
+    .querySelectorAll(
+      "[data-topping]:checked"
+    )
+    .forEach(
+      checkbox => {
+
+        const topping =
+          TOPPINGS.find(
+            x =>
+              x.id ===
+              checkbox.value
+          );
+
+        if (topping) {
+          selected.push(
+            topping
+          );
+        }
+
+      }
+    );
+
+  return selected;
+}
+
+
+function calculateOptionPrice(
+  item
+) {
+
+  const shots =
+    isCoffee(item)
+      ? Number(
+          shotSelect.value
+        )
+      : 0;
+
+
+  const shotPrice =
+    shots * 15;
+
+
+  const toppings =
+    getSelectedToppings();
+
+
+  const toppingPrice =
+    toppings.reduce(
+      (sum, topping) =>
+        sum + topping.price,
+      0
+    );
+
+
+  return (
+    item.price +
+    shotPrice +
+    toppingPrice
+  );
+}
+
+
+function updateOptionPrice() {
+
+  const item =
+    MENU.find(
+      x =>
+        x.id ===
+        editingItemId
+    );
+
+  if (!item) {
+    return;
+  }
+
+
+  optionPrice.textContent =
+    baht(
+      calculateOptionPrice(
+        item
+      )
+    );
+}
+shotSelect.addEventListener(
+  "change",
+  updateOptionPrice
+);
+
+
+toppingList.addEventListener(
+  "change",
+  updateOptionPrice
+);
+optionCancel.addEventListener(
+  "click",
+  () => {
+
+    optionBox.classList.remove(
+      "show"
+    );
+
+    editingKey = null;
+    editingItemId = null;
+
+  }
+);
+optionConfirm.addEventListener(
+  "click",
+  () => {
+
+    const item =
+      MENU.find(
+        x =>
+          x.id ===
+          editingItemId
+      );
+
+    if (!item) {
+      return;
+    }
+
+
+    const toppings =
+      getSelectedToppings();
+
+
+    const shots =
+      isCoffee(item)
+        ? Number(
+            shotSelect.value
+          )
+        : 0;
+
+
+    const sweetness =
+      isDrink(item)
+        ? sweetnessSelect.value
+        : null;
+
+
+    const unitPrice =
+      calculateOptionPrice(
+        item
+      );
+
+
+    const key =
+      editingKey !== null
+        ? editingKey
+        : (
+            Date.now() +
+            "_" +
+            Math.random()
+              .toString(36)
+              .slice(2)
+          );
+
+
+    cart[key] = {
+
+      itemId:
+        item.id,
+
+      name:
+        item.name,
+
+      basePrice:
+        item.price,
+
+      qty:
+        editingKey !== null &&
+        cart[editingKey]
+          ? cart[editingKey].qty
+          : 1,
+
+      sweetness:
+        sweetness,
+
+      shots:
+        shots,
+
+      toppings:
+        toppings.map(
+          topping => ({
+            id:
+              topping.id,
+            name:
+              topping.name,
+            price:
+              topping.price
+          })
+        ),
+
+      unitPrice:
+        unitPrice
+
+    };
+
+
+    optionBox.classList.remove(
+      "show"
+    );
+
+
+    editingKey = null;
+    editingItemId = null;
+
+
+    updateCart();
+
+  }
+);
+// ======================================================
+// อัปเดตตะกร้า
+// ======================================================
+
+function updateCart() {
+
+  const entries =
+    Object.entries(cart)
+      .filter(
+        ([, data]) =>
+          data &&
+          Number(data.qty) > 0
+      );
+
+
+  let total = 0;
+  let count = 0;
+
+
+  entries.forEach(
+    ([, data]) => {
+
+      total +=
+        Number(data.unitPrice) *
+        Number(data.qty);
+
+      count +=
+        Number(data.qty);
+
+    }
+  );
+
+
+  const hasItems =
+    entries.length > 0;
+
+
+  cartEl.classList.toggle(
+    "hidden",
+    !hasItems
+  );
+
+
+  bottom.classList.toggle(
+    "hidden",
+    !hasItems
+  );
+
+
+  cartRows.innerHTML =
+    entries.map(
+      ([key, data]) => {
+
+        let detail = "";
+
+
+        if (data.sweetness !== null) {
+
+          detail +=
+            "หวาน " +
+            data.sweetness +
+            "%";
+
+        }
+
+
+        if (
+          Number(data.shots) > 0
+        ) {
+
+          detail +=
+            " · +" +
+            data.shots +
+            " ช็อต";
+
+        }
+
+
+        if (
+          data.toppings &&
+          data.toppings.length
+        ) {
+
+          detail +=
+            " · " +
+            data.toppings
+              .map(
+                x => x.name
+              )
+              .join(", ");
+
+        }
+
+
+        return `
+          <div class="row">
+
+            <div style="flex:1">
+
+              <div
+                style="
+                  font-weight:800;
+                "
+              >
+                ${esc(data.name)}
+                × ${data.qty}
+              </div>
+
+              ${
+                detail
+                  ? `
+                    <div
+                      style="
+                        margin-top:4px;
+                        font-size:13px;
+                        color:#777;
+                      "
+                    >
+                      ${esc(detail)}
+                    </div>
+                  `
+                  : ""
+              }
+
+              <div class="cart-edit">
+
+                <button
+                  type="button"
+                  class="edit-btn"
+                  data-edit="${key}"
+                >
+                  ✏️ แก้ไข
+                </button>
+
+                <button
+                  type="button"
+                  class="delete-btn"
+                  data-delete="${key}"
+                >
+                  ลบ
+                </button>
+
+              </div>
+
+            </div>
+
+            <strong>
+              ${baht(
+                data.unitPrice *
+                data.qty
+              )}
+            </strong>
+
+          </div>
+        `;
+
+      }
+    ).join("");
+
+
+  totalEl.textContent =
+    baht(total);
+
+
+  bottomTotal.textContent =
+    baht(total);
+
+
+  bottomCount.textContent =
+    count +
+    " รายการ";
+    renderMenu();
+}
+
+// ======================================================
+// กดหมวดหมู่
+// ======================================================
+
+categoriesEl.addEventListener(
+  "click",
+  event => {
+
+    const button =
+      event.target.closest(
+        "[data-category]"
+      );
+
+
+    if (!button) {
+      return;
+    }
+
+
+    activeCategory =
+      button.dataset.category;
+
+
+    renderCategories();
+
+    renderMenu();
+
+  }
+);
+
+
+// ======================================================
+// + / -
+// ======================================================
+
+cartRows.addEventListener(
+  "click",
+  event => {
+
+    const editButton =
+      event.target.closest(
+        "[data-edit]"
+      );
+
+
+    if (editButton) {
+
+      const key =
+        editButton.dataset.edit;
+
+
+      const data =
+        cart[key];
+
+
+      if (!data) {
+        return;
+      }
+
+
+      openItemOptions(
+        data.itemId,
+        key
+      );
+
+      return;
+    }
+
+
+    const deleteButton =
+      event.target.closest(
+        "[data-delete]"
+      );
+
+
+    if (deleteButton) {
+
+      const key =
+        deleteButton.dataset.delete;
+
+
+      delete cart[key];
+
+
+      updateCart();
+
+    }
+
+  }
+);
+// ======================================================
+// Anonymous Login
+// ======================================================
+
+async function ensureAuth() {
+
+  if (auth.currentUser) {
+
+    return auth.currentUser;
+
+  }
+
+
+  const result =
+    await auth.signInAnonymously();
+
+
+  return result.user;
+
+}
+
+
+// ======================================================
+// เลขออเดอร์
+// ======================================================
+
+async function nextOrderNumber() {
+
+  const date =
+    bangkokDate();
+
+
+  const ref =
+    db
+      .collection("dailyCounters")
+      .doc(date);
+
+
+  let orderNumber = 0;
+
+
+  await db.runTransaction(
+    async transaction => {
+
+      const snap =
+        await transaction.get(ref);
+
+
+      const current =
+        snap.exists
+
+          ? Number(
+              snap.data().next || 1
+            )
+
+          : 1;
+
+
+      if (current > 999) {
+
+        throw new Error(
+          "เลขออเดอร์วันนี้เต็มแล้ว"
+        );
+
+      }
+
+
+      orderNumber =
+        current;
+
+
+      const data = {
+
+        next:
+          current + 1,
+
+        date:
+          date,
+
+        updatedAt:
+          firebase.firestore
+            .FieldValue
+            .serverTimestamp()
+
+      };
+
+
+      if (snap.exists) {
+
+        transaction.update(
+          ref,
+          data
+        );
+
+      } else {
+
+        transaction.set(
+          ref,
+          data
+        );
+
+      }
+
+    }
+  );
+
+
+  return {
+    date,
+    orderNumber
+  };
+
+}
+
+
+// ======================================================
+// ยืนยันสั่ง
+// ======================================================
+
+submit.addEventListener(
+  "click",
+  async () => {
+
+    const customerName =
+      customerNameInput.value
+        .trim();
+
+    // ดึงค่าที่อยู่
+    const customerAddress =
+      customerAddressInput.value
+        .trim();
+
+
+    if (!customerName) {
+
+      message(
+        "กรุณาใส่ชื่อลูกค้าก่อนสั่งอาหาร"
+      );
+
+      customerNameInput.focus();
+
+      return;
+
+    }
+    if (!customerAddress) {
+
+      message(
+        "กรุณากรอกที่อยู่หรือเลขโต๊ะก่อนสั่งอาหาร"
+      );
+
+      customerAddressInput.focus();
+
+      return;
+
+    }
+
+    const paymentInput =
+  document.querySelector(
+    'input[name="paymentMethod"]:checked'
+  );
+
+    const paymentMethod =
+  paymentInput
+    ? paymentInput.value
+    : "cash";
+
+    const entries =
+  Object.entries(cart)
+    .filter(
+      ([, data]) =>
+        data &&
+        Number(data.qty) > 0
+    );
+
+    if (!entries.length) {
+
+      message(
+        "กรุณาเลือกอาหารก่อน"
+      );
+
+      return;
+
+    }
+
+
+    submit.disabled =
+      true;
+
+
+    submit.textContent =
+      "กำลังสั่งอาหาร...";
+
+
+    try {
+
+      const user =
+        await ensureAuth();
+
+
+      const items =
+  entries.map(
+    ([, data]) => {
+
+      return {
+
+        id:
+          data.itemId,
+
+        name:
+          data.name,
+
+        price:
+          data.unitPrice,
+
+        basePrice:
+          data.basePrice,
+
+        qty:
+          data.qty,
+
+        sweetness:
+          data.sweetness,
+
+        shots:
+          data.shots,
+
+        toppings:
+          data.toppings || [],
+
+        lineTotal:
+          data.unitPrice *
+          data.qty
+
+      };
+
+    }
+  );
+  
+      const total =
+        items.reduce(
+          (sum, item) =>
+            sum +
+            item.lineTotal,
+          0
+        );
+
+
+      const {
+        date,
+        orderNumber
+      } =
+        await nextOrderNumber();
+
+
+      const orderRef =
+        db
+          .collection("orders")
+          .doc();
+
+
+      await orderRef.set({
+
+        orderNumber:
+          orderNumber,
+
+        orderDate:
+          date,
+
+        customerUid:
+  user.uid,
+
+customerName:
+  customerName,
+
+customerAddress:  // บันทึกที่อยู่เพิ่มลง Firebase
+  customerAddress,  
+
+paymentMethod:
+  paymentMethod,
+
+paymentConfirmedByCustomer:
+  false,
+
+items:
+  items,
+
+        total:
+          total,
+
+        status:
+          "new",
+
+        createdAt:
+          firebase.firestore
+            .FieldValue
+            .serverTimestamp(),
+
+        updatedAt:
+          firebase.firestore
+            .FieldValue
+            .serverTimestamp()
+
+      });
+
+      // จำชื่อและที่อยู่ไว้ในเครื่องลูกค้า
+        localStorage.setItem("customerName", customerName);
+        localStorage.setItem("customerAddress", customerAddress);
+
+        
+      // ส่งแจ้งเตือนไปยังมือถือร้าน
+      try {
+        const idToken = await user.getIdToken();
+
+        const response = await fetch(
+          "/.netlify/functions/notify-order",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${idToken}`
+            },
+            body: JSON.stringify({
+              orderId: orderRef.id
+            })
+          }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          console.error("ส่งแจ้งเตือนไม่สำเร็จ:", result);
+        } else {
+          console.log("ผลการส่งแจ้งเตือน:", result);
+        }
+      } catch (notifyError) {
+        console.error("แจ้งเตือนมีปัญหา:", notifyError);
+      }
+
+      // เด้งไปหน้าติดตามออเดอร์
+
+      window.location.href =
+        "order.html?id=" +
+        encodeURIComponent(
+          orderRef.id
+        );
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+
+      message(
+        "สั่งอาหารไม่สำเร็จ: " +
+        (
+          error.message ||
+          "เกิดข้อผิดพลาด"
+        )
+      );
+
+
+      submit.disabled =
+        false;
+
+
+      submit.textContent =
+        "ยืนยันสั่งอาหาร";
+
+    }
+
+  }
+);
+
+
+// ======================================================
+// เริ่มต้น
+// ======================================================
+// ดึงเมนูที่เปิดขายจาก Firebase
+db.collection("menuItems")
+  .where("active", "==", true)
+  .onSnapshot((snapshot) => {
+    MENU = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    renderMenu();
+    updateCart();
+  }, (error) => {
+    console.error("โหลดเมนูไม่สำเร็จ:", error);
+  });
+
+renderCategories();
+
+renderMenu();
+
+updateCart();
+
+// ดึงค่าเดิมมาใส่ช่องพิมพ์ให้อัตโนมัติ
+if (customerNameInput) {
+  customerNameInput.value = localStorage.getItem("customerName") || "";
+}
+if (customerAddressInput) {
+  customerAddressInput.value = localStorage.getItem("customerAddress") || "";
+}
+
+</script>
+
+</body>
+
+</html>
