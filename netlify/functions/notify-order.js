@@ -3,7 +3,7 @@ import admin from "firebase-admin";
 
 const PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 const SERVICE_ACCOUNT_JSON = process.env.FIREBASE_SERVICE_ACCOUNT;
-const ALLOWED_ORIGIN = "https://peppy-boba-036bc7.netlify.app";
+const ALLOWED_ORIGIN = "https://kohihauscoffee-bake98.netlify.app";
 
 function jsonResponse(data, status = 200, origin = ALLOWED_ORIGIN) {
   return new Response(JSON.stringify(data), {
