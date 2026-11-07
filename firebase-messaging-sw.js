@@ -1,11 +1,6 @@
 
-importScripts(
-  "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"
-);
-
-importScripts(
-  "https://www.gstatic.com/firebasejs/10.12.5/firebase-messaging-compat.js"
-);
+importScripts("./firebase-app-compat.js");
+importScripts("./firebase-messaging-compat.js");
 
 firebase.initializeApp({
   apiKey: "AIzaSyAaqxo1kSnMBCN1rfqKLp_svZIqkvZSPRI",
@@ -21,11 +16,15 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
   const title =
-    payload.notification?.title || "มีออเดอร์ใหม่!";
+    payload.data?.title ||
+    payload.notification?.title ||
+    "มีออเดอร์ใหม่!";
 
   const options = {
     body:
-      payload.notification?.body || "ร้านของคุณได้รับออเดอร์ใหม่",
+      payload.data?.body ||
+      payload.notification?.body ||
+      "ร้านของคุณได้รับออเดอร์ใหม่",
     icon: "/icon-192.png",
     data: payload.data || {}
   };
