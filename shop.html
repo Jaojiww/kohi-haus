@@ -1401,14 +1401,15 @@ enableNotifications.addEventListener("click", async () => {
       );
     }
 
-    await firebase.firestore()
-      .collection("shopDevices")
-      .doc(user.uid)
-      .set({
-        token: token,
-        updatedAt:
-          firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
+   await firebase.firestore()
+  .collection("shopDevices")
+  .doc(token)
+  .set({
+    token: token,
+    userUid: user.uid,
+    updatedAt:
+      firebase.firestore.FieldValue.serverTimestamp()
+  }, { merge: true });
 
     // ปลดล็อกเสียงจากการแตะหน้าจอ
     const audio = new Audio("alert.mp3");
