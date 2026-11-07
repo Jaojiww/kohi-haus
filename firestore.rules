@@ -200,7 +200,12 @@ service cloud.firestore {
         && request.auth.token.email ==
            'yanisakri98@gmail.com';
     }
-    
+        match /shopDevices/{deviceId} {
+      allow read, create, update, delete: if
+        request.auth != null
+        && request.auth.token.email ==
+           'yanisakri98@gmail.com';
+    }
   }
 
 }
